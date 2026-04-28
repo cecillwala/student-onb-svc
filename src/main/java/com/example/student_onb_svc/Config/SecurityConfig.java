@@ -31,7 +31,9 @@ public class SecurityConfig {
                                 "/api/v1/onboarding/verify",
                                 "/api/v1/onboarding/verify-identity",
                                 "/api/v1/onboarding/**",
+                                "/api/v1/onboarding/tracking",
                                 // Swagger
+                                "/api/v1/onboarding/chat",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"

@@ -24,6 +24,12 @@ public class Helper {
     }
 
 
+    public String getStudentGender(String token){
+        String hashed = sha256(token);
+        return jdbc.queryForObject("SELECT gender FROM students WHERE magic_link_token = ?", String.class, hashed);
+    }
+
+
     public String sha256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

@@ -45,30 +45,39 @@ public class AccommodationDetailsService {
                     req.getLandlordFirstName(), req.getLandlordLastName(), req.getLandlordPhone(), req.getRoommateFirstName(), req.getRoommateLastName(),
                     req.getRoommatePhone(), req.getFloor(), student_id);
         } else {
-            // Insert new
-            jdbc.update("""
-    INSERT INTO accommodation_details (id, student_id, preferred_hostel_id, off_campus_location, special_needs, residence_type, room_type, room, off_campus_reason, guardian_aware, building_name, off_campus_room_type, landlord_first_name, landlord_last_name, landlord_phone, roommate_first_name, roommate_last_name, roommate_phone, floor)
-    VALUES (gen_random_uuid(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """,
-                    student_id,
-                    req.getHostelPreference() != null ? UUID.fromString(req.getHostelPreference()) : null,
-                    req.getOffCampusLocation(),
-                    req.getSpecialNeeds(),
-                    req.getResidenceType(),
-                    req.getRoomType(),
-                    req.getRoom() != null ? UUID.fromString(req.getRoom()) : null,
-                    req.getOffCampusReason(),
-                    req.getGuardianAware() != null ? req.getGuardianAware().toString() : null,
-                    req.getBuildingName(),
-                    req.getOffCampusRoomType(),
-                    req.getLandlordFirstName(),
-                    req.getLandlordLastName(),
-                    req.getLandlordPhone(),
-                    req.getRoommateFirstName(),
-                    req.getRoommateLastName(),
-                    req.getRoommatePhone(),
-                    req.getFloor()
-            );
+            try {
+                // Insert new
+                jdbc.update(
+                        """
+                                    INSERT INTO accommodation_details (id, student_id, preferred_hostel_id, off_campus_location, special_needs, residence_type, room_type, room, 
+                                    off_campus_reason, guardian_aware, building_name, off_campus_room_type, landlord_first_name, landlord_last_name, landlord_phone, roommate_first_name, 
+                                    roommate_last_name, roommate_phone, floor)
+                                    VALUES (gen_random_uuid(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                """,
+                        student_id,
+                        req.getHostelPreference() != null ? UUID.fromString(req.getHostelPreference()) : null,
+                        req.getOffCampusLocation(),
+                        req.getSpecialNeeds(),
+                        req.getResidenceType(),
+                        req.getRoomType(),
+                        req.getRoom() != null ? UUID.fromString(req.getRoom()) : null,
+                        req.getOffCampusReason(),
+                        req.getGuardianAware() != null ? req.getGuardianAware().toString() : null,
+                        req.getBuildingName(),
+                        req.getOffCampusRoomType(),
+                        req.getLandlordFirstName(),
+                        req.getLandlordLastName(),
+                        req.getLandlordPhone(),
+                        req.getRoommateFirstName(),
+                        req.getRoommateLastName(),
+                        req.getRoommatePhone(),
+                        req.getFloor()
+                );
+            }
+            catch (Exception e){
+                log.info(e.getMessage());
+                e.printStackTrace();
+            }
         }
 
         // Advance step
@@ -90,7 +99,8 @@ public class AccommodationDetailsService {
         return jdbc.query(sql, BeanPropertyRowMapper.newInstance(HostelModel.class));
     }
 
-    public List<HostelModel> getAccommodationDetails(){
+    public List<HostelModel> getAccommodationDetails(String token){
+        String gender = helper.getStudentGender(token);
         String sql = """
         SELECT h.id AS hostel_id, h.name AS hostel,
                h.gender_allocation, h.total_capacity,
@@ -99,7 +109,7 @@ public class AccommodationDetailsService {
                r.capacity, r.available_beds
         FROM hostels h
         JOIN rooms r ON h.id = r.hostel_id
-        WHERE r.status = 'AVAILABLE' AND r.available_beds > 0
+        WHERE r.status = 'AVAILABLE' AND h.gender_allocation = ? AND r.available_beds > 0
         ORDER BY h.name, r.floor, r.room_number
         """;
 
@@ -134,7 +144,7 @@ public class AccommodationDetailsService {
             room.setAvailable_beds(rs.getInt("available_beds"));
 
             hostel.getRooms().add(room);
-        });
+        }, gender);
 
         // Derive unique floors and roomTypes per hostel
         for (HostelModel hostel : hostelMap.values()) {

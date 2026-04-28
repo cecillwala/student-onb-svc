@@ -26,8 +26,8 @@ public class AccommodationDetailsController {
     }
 
     @GetMapping("/hostels")
-    public ResponseEntity<List<HostelModel>> getHostels(){
-        return ResponseEntity.ok(accommodationDetailsService.getAccommodationDetails());
+    public ResponseEntity<List<HostelModel>> getHostels( @RequestParam String token){
+        return ResponseEntity.ok(accommodationDetailsService.getAccommodationDetails(token));
     }
 
     @GetMapping("/rooms")

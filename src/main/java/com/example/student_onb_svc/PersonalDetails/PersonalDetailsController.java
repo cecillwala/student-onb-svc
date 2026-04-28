@@ -17,8 +17,8 @@ public class PersonalDetailsController {
 
     @GetMapping("/personal-details")
     public ResponseEntity<PersonalDetailsRequest> getPersonalDetails(
-            @AuthenticationPrincipal StudentPrincipal principal) {
-        return ResponseEntity.ok(personalDetailsService.get(principal.getStudentId()));
+            @RequestParam String token) {
+        return ResponseEntity.ok(personalDetailsService.get(token));
     }
 
     @PostMapping("/personal-details")

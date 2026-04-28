@@ -13,7 +13,7 @@ public class AccommodationDetailsRequest {
     private String offCampusReason;
     private String guardianAware;
     private String buildingName;
-    private String floor;
+    private int floor;
     private String offCampusLocation;
     private String offCampusRoomType;
     private String landlordFirstName;

@@ -1,7 +1,9 @@
 package com.example.student_onb_svc.PersonalDetails;
 
+import com.example.student_onb_svc.Common.Helper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,12 @@ public class PersonalDetailsService {
 
     private final JdbcTemplate jdbc;
 
-    public PersonalDetailsRequest get(UUID studentId) {
+    @Autowired
+    Helper helper;
+
+    public PersonalDetailsRequest get(String token) {
+
+        UUID studentId = helper.getStudentId(token);
         List<PersonalDetailsRequest> results = jdbc.query("""
             SELECT gender, religion, nationality, email, phone,
                    county, constituency, ward, postal_code,
