@@ -46,7 +46,7 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
 
-chatbot:
-  api-key: ${GEMINI_API_KEY:AIzaSyDYrNMoO-nWm1DnRPHqiGCCWm7upuTwo7Y}
-  model: gemini-3.1-flash-lite-preview
-  max-tokens: 1024
+#chatbot:
+#  api-key: ${GEMINI_API_KEY:AIzaSyDYrNMoO-nWm1DnRPHqiGCCWm7upuTwo7Y}
+#  model: gemini-3.1-flash-lite-preview
+#  max-tokens: 1024
